@@ -64,7 +64,7 @@ for i in range(5):
             if group == vote:
                 correct += 1
             else:
-                # print(confidence)
+                print(confidence)
             total += 1
 
     #print('Accuracy:', correct/total)
