@@ -39,7 +39,6 @@ class Support_Vector_Machine:
         all_data = None
 
         # support vectors yi(xi.w+b) = 1
-        
 
         step_sizes = [
             self.max_feature_value * 0.1,
@@ -87,7 +86,7 @@ class Support_Vector_Machine:
                     optimized = True
                     print('Optimized a step')
                 else:
-                    w -= step
+                    w = w - step
             norms = sorted([n for n in opt_dict])
             opt_choice = opt_dict[norms[0]]
 
@@ -97,6 +96,47 @@ class Support_Vector_Machine:
 
     def predict(self, features):
         classification = np.sign(np.dot(np.array(features), self.w)+self.b)
+        if classification != 0 and self.visualization:
+            self.ax.scatter(
+                features[0], features[1],  s=200, marker='*', c=self.colors[classification]
+            )
+
+        return classification
+
+    def visualize(self):
+        [[self.ax.scatter(
+            x[0], x[1], s=100, color=self.colors[i]
+        ) for x in data_dict[i]] for i in data_dict]
+
+        # x.w+b hyperplane
+        # v = x.w+b
+        #psv = 1
+        #nsv = -1
+        # dec = 0
+
+        # only for visualization
+        def hyperplane(x, w, b, v):
+            return (-w[0]*x-b+v) / w[1]
+
+        datarange = (self.min_feature_value*0.9, self.max_feature_value*1.1)
+        hyp_x_min = datarange[0]
+        hyp_x_max = datarange[1]
+
+        # positive support vector hyperplane
+        psv1 = hyperplane(hyp_x_min, self.w, self.b, 1)
+        psv2 = hyperplane(hyp_x_max, self.w, self.b, 1)
+        self.ax.plot([hyp_x_min, hyp_x_max], [psv1, psv2])
+
+        # negative support vector hyperplane
+        nsv1 = hyperplane(hyp_x_min, self.w, self.b, -1)
+        nsv2 = hyperplane(hyp_x_max, self.w, self.b, -1)
+        self.ax.plot([hyp_x_min, hyp_x_max], [nsv1, nsv2])
+        # decision boundary
+        db1 = hyperplane(hyp_x_min, self.w, self.b, 0)
+        db2 = hyperplane(hyp_x_max, self.w, self.b, 0)
+        self.ax.plot([hyp_x_min, hyp_x_max], [db1, db2])
+
+        plt.show()
 
 
 data_dict = {
@@ -111,3 +151,7 @@ data_dict = {
         [7, 3]
     ])
 }
+
+svm = Support_Vector_Machine()
+svm.fit(data=data_dict)
+svm.visualize()
