@@ -16,7 +16,7 @@ X = np.array([
 # plt.show()
 
 colors = 10*[
-    'green', 'red', 'cyan', 'blue', 'black'
+    'green', 'red', 'cyan', 'blue', 'black', 'yellow', 'magenta'
 ]
 
 
