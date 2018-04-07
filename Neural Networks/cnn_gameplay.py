@@ -132,20 +132,22 @@ for each_game in range(10):
     env.reset()
 
     for _ in range(goal_steps):
-        env.render()
+        # env.render()
         if len(prev_obs) == 0:
             action = random.randrange(0, 2)
         else:
             action = np.argmax(
-                model.predict(prev_obs.reshape(-1, len(prev_obs), 1)[0])
+                model.predict(
+                    np.array([prev_obs]).reshape(1, -1, len(prev_obs), 1)[0]
+                )
             )
-
         choices.append(action)
         new_observation, reward, done, info = env.step(action)
         prev_obs = new_observation
         game_memory.append([new_observation, action])
         score += reward
         if done:
+            print(prev_obs)
             break
         scores.append(score)
 
@@ -155,4 +157,3 @@ print(
         choices.count(1)/len(choices),
         choices.count(0)/len(choices)
     ))
-
